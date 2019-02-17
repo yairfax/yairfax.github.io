@@ -1,0 +1,15 @@
+body {
+	background-color: #C4e1c3;
+	font-family: 'Open Sans', sans-serif;
+}
+
+.btn-success {
+	background-color: #03A700;
+	
+}
+
+.btn-success:hover {
+	background-color: #C4e1c3;
+	color: #000000;
+	border-color: #C4e1c3;
+}

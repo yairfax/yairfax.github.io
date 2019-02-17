@@ -1,0 +1,108 @@
+<html>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+<link rel="stylesheet" href="subpage.css">
+
+<head>
+	<title>Study Timer</title>
+
+	<style>
+		body {
+			background-color: #C4e1c3;
+			font-family: 'Open Sans', sans-serif;
+		}
+		.btn-success {
+			background-color: #03A700;
+			
+		}
+		.btn-success:hover {
+			background-color: #C4e1c3;
+			color: #000000;
+			border-color: #C4e1c3;
+		}
+		#content {
+			position: fixed;
+			top: 20%;
+			right: 50%;
+			transform: translate(50%, -20%);
+		}
+	</style>
+</head>
+
+<body>
+	<div class="card" style="width: 30rem;" id="content">
+		<form id="time-form" action="timer-popup.html" target="_blank">
+			<div class="card-header" style="text-align: center">
+				<button class="btn btn-success" id="start" >Start Timer</button>
+			</div>
+			<div class="card-body">
+
+				<label>Task 1</label>
+				<div id="task1" class="row">
+					<div class="col">
+						<div class="form-group">
+							<input class="form-control" type="text" name="task1-name"required id ="task1-name" placeholder="Task 1 Name">
+						</div>
+					</div>
+					<div class="col">
+						<div class="form-group">
+							<input name="task1-time" class="form-control" type="number" min="0" max="60" required id="task1-time" placeholder="Task 1 Time (Minutes)">
+						</div>
+					</div>
+				</div>
+
+				<div class="form-check">
+					<input class="form-check-input" type="checkbox" id="task2-checkbox">
+					<label class="form-check-label">Do you want a second task?</label>
+				</div>
+				
+				<div id="task2" hidden>
+					<label for="task2-name">Task 2</label>
+					<div class="row">
+						<div class="form-group col">
+							<input class="form-control task2" type="text" id ="task2-name" name="task2-name" placeholder="Task 2 Name">
+						</div>
+						<div class="form-group col">
+							<input class="form-control task2" type="number" min="0" max="60" id="task2-time" name="task2-time" placeholder="Task 2 Time (Minutes)">
+						</div>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<div class="form-check">
+						<input class="form-check-input" type="checkbox" id="break-checkbox">
+						<label class="form-check-label">Do you want a break?</label>
+					</div>
+				</div>
+				<div id="break" hidden>
+					<div class="form-group">
+						<input class="form-control" name="break" type="number" min="0" max="60" id="break-time" placeholder="Time for Break (Minutes)">
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label for="times">How many times do you want to cycle?</label>
+					<input class="form-control" id="times" type="number" min=1 max=5 placeholder="1" name="times">
+				</div>
+			</div>
+		</form>
+	</div>
+</body>
+
+<script>
+	$("#task2-checkbox").change(function(event) {
+		$("#task2").prop('hidden', !$("#task2").prop('hidden'))
+		$(".task2").prop('required', !$(".task2").prop('required'))
+		$(".task2").val('')
+	})
+	$("#break-checkbox").change(function(event) {
+		$("#break").prop('hidden', !$("#break").prop('hidden'))
+		$("#break").prop('required', !$("#break").prop('required'))
+		$("#break-time").val('')
+	})
+</script>
+
+</html>

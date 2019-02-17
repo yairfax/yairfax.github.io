@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+  <link rel="stylesheet" href="subpage.css">
+  <style>
+    
+    .card {
+      margin-top: 50px;
+      position: inline;
+    }
+
+    #pause:hover {
+      border-color: gray;
+    }
+
+  </style>
+</head>
+<body>
+<div class="container">
+  <div class="card" id="content">
+    <div class="card-header" style="text-align: center; font-size: 20pt">
+      Type Instructions to Be Read
+    </div>
+    <div class="card-body">
+      <form>
+        <div class="form-group">
+          <div class="form-check form-check-inline">
+            <input class="output" type="radio" name="output" value="speech">
+            <label class="form-check-label" for="speech">Speech</label>
+          </div>
+          <div class="form-check form-check-inline">
+            <input class="output" type="radio" name="output" value="text">
+            <label class="form-check-label" for="text">Text</label>
+          </div>
+          <div class="form-check form-check-inline">
+            <input class="output" type="radio" name="output" value="speechtext" checked>
+            <label class="form-check-label" for="speechtext">Speech and Text</label>
+          </div>
+        </div>
+
+        <div id="steps">
+          <div class="row step">
+            <div class="col-md-10 form-group">
+              <label for="step">Step 1</label>
+              <input class="form-control" type="text" name="step" required>
+            </div>
+            <div class="col-md-2 form-group">
+              <label for="time">Time (Seconds)</label>
+              <input class="form-control" id="time" type="number" name="time" required>
+            </div> 
+          </div>
+        </div>
+
+        <button class="btn btn-success" value="Submit" id="btnsubmit">Submit</button>
+        <button class="btn btn-success" type="button" id="add">Add Step</button>
+      </form>
+    </div>
+
+    
+
+  </div>
+  <button id="pause" style="margin-top: 50px" class="btn btn-success">Pause</button>
+  
+
+  <div hidden class="card" id="textholder">
+    <div id="text" class="card-body"></div>
+  </div>
+
+</body>
+<script>
+  const multi = 1000;
+  var output;
+  var currTimer;
+  $("#pause").hide();
+
+  function Timer(callback, delay) {
+    var timerId, start, remaining = delay;
+
+    this.pause = function() {
+        window.clearTimeout(timerId);
+        remaining -= new Date() - start;
+    };
+
+    this.resume = function() {
+        start = new Date();
+        window.clearTimeout(timerId);
+        timerId = window.setTimeout(callback, remaining);
+    };
+
+    this.resume();
+  }
+
+  function speakboy(k) {
+    var speech = $($(".step")[k]).find('input').val();
+    if (output.match(/speech/i)) {
+      var msg = new SpeechSynthesisUtterance(speech);
+      window.speechSynthesis.speak(msg);
+    }
+    if (output.match(/text/i)) {
+      $("#text").text(speech)
+    }
+    currTimer = new Timer(function() {
+      if (k < $(".step").length) {
+        speakboy(k + 1)
+      } else {
+        location.reload();
+      }
+    }, multi * parseInt($($(".step")[k]).find('#time').val()))
+  }
+
+  $("form").submit(function(event) {
+    
+    output = $(".output:checked").val();
+
+    $("#pause").show()
+    event.preventDefault();
+    if (output.match(/text/i)) {
+      $("form").hide()
+      $("#content").hide()
+      $("#textholder").prop('hidden', false);
+    }
+    speakboy(0);
+  })
+
+  $("#pause").click(function(event) {
+    if ($("#pause").text() === "Pause") {
+      currTimer.pause();
+      $("#pause").text("Resume");
+      window.speechSynthesis.pause();
+    } else {
+      currTimer.resume();
+      $("#pause").text("Pause");
+      window.speechSynthesis.resume();
+    }
+  })
+
+  var i = 2
+  $("#add").click(function() {
+    $("#steps").append(`<div class="row step">
+            <div class="col-md-10 form-group">
+              <label for="step">Step ${i++}</label>
+              <input class="form-control" type="text" name="step" required>
+            </div>
+            <div class="col-md-2 form-group">
+              <label for="time">Time (Seconds)</label>
+              <input class="form-control" id="time" type="number" name="time" required>
+            </div> 
+          </div>`)
+
+    
+  })
+</script>
+
+</html>
